@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Automatic Messages</title>
+    <link rel="stylesheet"href="{{url_for('static',filename='style.css')}}">
+</head>
+<body>
+    <div class="container">
+        <h1>Send Automatic Messages</h1>
+        <form id="smsFrom">
+            <input type="text"id='phone_number'placeholder='09399815417'required>
+            <textarea id="message"placeholder='I will contact you later'required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+        <p id="response"class='hidden'></p>
+    </div>
+    <script>
+        const form=document.getElementById('smsFrom');
+        form.addEventListener('submit',async(e)=>{
+            e.preventDefault();
+            const phone_number=document.getElementById('phone_number').value;
+            const message=document.getElementById('message').value;
+            const response=await fetch('/send-message',{
+                method:'post',
+                headers:{'content-type':'application/json'},
+                body:JSON.stringify({phone_number,message})
+            });
+            const result=await response.json();
+            const responseEL=document.getElementById('response');
+            responseEL.textContent=result.message;
+            responseEL.classList.remove('hodden');
+        });
+        </script>
+</body>
+</html>
